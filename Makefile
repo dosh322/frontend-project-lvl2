@@ -1,12 +1,12 @@
 install:
-       npm install
+	npm install
 
 run:
-       node bin/genDiff.js
+	node bin/genDiff.js
 
 lint:
-       npx eslint .
+	npx eslint .
 
 publish:
-       npm publish --dry-run 
+	npm publish --dry-run 
 
