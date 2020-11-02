@@ -8,7 +8,7 @@
   "description": "Generate the differences between two JSON/YAML documents",
   "main": "/index.js",
   "scripts": {
-    "test": "npx -n '--experimental-vm-modules --no-warnings' jest --watch"
+    "test": "npx -n '--experimental-vm-modules --no-warnings' jest"
   },
   "repository": {
     "type": "git",
