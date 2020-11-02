@@ -9,17 +9,17 @@ const genDiff = (path1, path2) => {
   const keys = _.union(keys1, keys2);
   const result = keys.map((key) => {
     if (keys1.includes(key) && !keys2.includes(key)) {
-      return `- ${key}: ${json1[key]}\n`;
+      return `- ${key}: ${json1[key]}`;
     } if (!keys1.includes(key) && keys2.includes(key)) {
-      return `+ ${key}: ${json2[key]}\n`;
+      return `+ ${key}: ${json2[key]}`;
     } if (_.isEqual(json1[key], json2[key])) {
-      return `  ${key}: ${json1[key]}\n`;
+      return `  ${key}: ${json1[key]}`;
     } if (!_.isEqual(json1[key], json2[key])) {
-      return `- ${key}: ${json1[key]}\n+ ${key}: ${json2[key]}\n`;
+      return `- ${key}: ${json1[key]}\n+ ${key}: ${json2[key]}`;
     }
     return '';
   });
-  return result.join('');
+  return result.join('\n');
 };
 
 export default genDiff;
