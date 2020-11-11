@@ -1,25 +1,18 @@
-import _ from 'lodash';
-import getJSON from './getJSON.js';
+import fs from 'fs';
+import path from 'path';
+import parse from './parsers.js';
+import genDiff from './gendiff.js';
+import stylize from './formatters/stylish.js';
 
-const genDiff = (path1, path2) => {
-  const json1 = getJSON(path1);
-  const json2 = getJSON(path2);
-  const keys1 = Object.keys(json1).sort();
-  const keys2 = Object.keys(json2).sort();
-  const keys = _.union(keys1, keys2);
-  const result = keys.map((key) => {
-    if (keys1.includes(key) && !keys2.includes(key)) {
-      return `- ${key}: ${json1[key]}`;
-    } if (!keys1.includes(key) && keys2.includes(key)) {
-      return `+ ${key}: ${json2[key]}`;
-    } if (_.isEqual(json1[key], json2[key])) {
-      return `  ${key}: ${json1[key]}`;
-    } if (!_.isEqual(json1[key], json2[key])) {
-      return `- ${key}: ${json1[key]}\n+ ${key}: ${json2[key]}`;
-    }
-    return '';
-  });
-  return result.join('\n');
+const getContent = (filepath) => {
+  const ext = path.extname(filepath).slice(1);
+  const fileContent = fs.readFileSync(path.resolve(process.cwd(), filepath));
+  return parse(fileContent, ext);
 };
 
-export default genDiff;
+export default (filepath1, filepath2) => {
+  const file1 = getContent(filepath1);
+  const file2 = getContent(filepath2);
+  const dataDiff = genDiff(file1, file2);
+  return stylize(dataDiff);
+};
