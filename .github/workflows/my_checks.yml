@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  linting&tests:
+  linting-n-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
