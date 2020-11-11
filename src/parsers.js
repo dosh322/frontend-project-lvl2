@@ -7,7 +7,7 @@ const parse = (fileContent, ext) => {
     case 'yml':
       return yaml.safeLoad(fileContent);
     default:
-      throw new Error('Undefined File Format');
+      throw new Error(`Unexpected file extension: ${ext}`);
   }
 };
 

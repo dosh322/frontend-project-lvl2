@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const format = (value) => {
+const formatValue = (value) => {
   if (_.isString(value)) {
     return `'${value}'`;
   } if (_.isObject(value)) {
@@ -8,20 +8,20 @@ const format = (value) => {
   } return value;
 };
 
-const plainer = (data) => {
+const toPlain = (data) => {
   const iter = (tree, path = []) => {
     const test = tree.flatMap((obj) => {
       const key = [...path, obj.key].join('.');
       switch (obj.type) {
         case ('added'):
-          return `Property '${key}' was added with value: ${format(obj.value)}`;
+          return `Property '${key}' was added with value: ${formatValue(obj.value)}`;
         case ('deleted'):
           return `Property '${key}' was removed`;
         case ('updated'):
-          return `Property '${key}' was updated. From ${format(obj.firstValue)} to ${format(obj.secondValue)}`;
+          return `Property '${key}' was updated. From ${formatValue(obj.firstValue)} to ${formatValue(obj.secondValue)}`;
         case ('nested'):
           return `${iter(obj.children, [key])}`;
-        case ('same'):
+        case ('unchanged'):
           return [];
         default:
           throw new Error('### Unexpected error ');
@@ -32,4 +32,4 @@ const plainer = (data) => {
   return iter(data);
 };
 
-export default plainer;
+export default toPlain;

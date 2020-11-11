@@ -14,7 +14,7 @@ const genDiff = (obj1, obj2) => {
         key, type: 'updated', firstValue: obj1[key], secondValue: obj2[key],
       };
     }
-    return { key, type: 'same', value: obj1[key] };
+    return { key, type: 'unchanged', value: obj1[key] };
   });
 };
 
