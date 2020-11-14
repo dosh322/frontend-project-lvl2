@@ -2,14 +2,14 @@ import makeStylish from './stylish.js';
 import makePlain from './plain.js';
 import makeJSON from './json.js';
 
-export default (data, format) => {
+export default (diff, format) => {
   switch (format) {
     case ('stylish'):
-      return makeStylish(data);
+      return makeStylish(diff);
     case ('plain'):
-      return makePlain(data);
+      return makePlain(diff);
     case ('json'):
-      return makeJSON(data);
+      return makeJSON(diff);
     default:
       throw new Error(`unexpected output format: ${format}`);
   }
