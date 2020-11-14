@@ -1,15 +1,15 @@
-import toStylish from './stylish.js';
-import toPlain from './plain.js';
-import toJSON from './json.js';
+import makeStylish from './stylish.js';
+import makePlain from './plain.js';
+import makeJSON from './json.js';
 
 export default (data, format) => {
   switch (format) {
     case ('stylish'):
-      return toStylish(data);
+      return makeStylish(data);
     case ('plain'):
-      return toPlain(data);
+      return makePlain(data);
     case ('json'):
-      return toJSON(data);
+      return makeJSON(data);
     default:
       throw new Error(`unexpected output format: ${format}`);
   }

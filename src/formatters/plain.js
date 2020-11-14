@@ -3,33 +3,32 @@ import _ from 'lodash';
 const formatValue = (value) => {
   if (_.isString(value)) {
     return `'${value}'`;
-  } if (_.isObject(value)) {
+  }
+  if (_.isObject(value)) {
     return '[complex value]';
   } return value;
 };
 
-const toPlain = (data) => {
-  const iter = (tree, path = []) => {
-    const test = tree.flatMap((obj) => {
-      const key = [...path, obj.key].join('.');
-      switch (obj.type) {
+const makePlain = (diff) => {
+  const iter = (tree, path = []) => tree
+    .flatMap((node) => {
+      const key = [...path, node.key].join('.');
+      switch (node.type) {
         case ('added'):
-          return `Property '${key}' was added with value: ${formatValue(obj.value)}`;
+          return `Property '${key}' was added with value: ${formatValue(node.value)}`;
         case ('deleted'):
           return `Property '${key}' was removed`;
         case ('updated'):
-          return `Property '${key}' was updated. From ${formatValue(obj.firstValue)} to ${formatValue(obj.secondValue)}`;
+          return `Property '${key}' was updated. From ${formatValue(node.firstValue)} to ${formatValue(node.secondValue)}`;
         case ('nested'):
-          return `${iter(obj.children, [key])}`;
+          return `${iter(node.children, [key])}`;
         case ('unchanged'):
           return [];
         default:
           throw new Error('### Unexpected error ');
       }
-    });
-    return test.join('\n');
-  };
-  return iter(data);
+    }).join('\n');
+  return iter(diff);
 };
 
-export default toPlain;
+export default makePlain;

@@ -2,48 +2,48 @@ import _ from 'lodash';
 
 const baseIndent = 2;
 
-const getIndent = (spaces) => (' ').repeat(spaces);
-const getCurrentSpaces = (spaces) => spaces + baseIndent;
-const getNextSpaces = (spaces) => getCurrentSpaces(spaces) + baseIndent;
+const getIndent = (spacesCount) => (' ').repeat(spacesCount);
+const getCurrentSpacesCount = (spacesCount) => spacesCount + baseIndent;
+const getNextSpacesCount = (spacesCount) => getCurrentSpacesCount(spacesCount) + baseIndent;
 
-const getValue = (data, spaces) => {
-  if (!_.isObject(data)) {
-    return data;
+const getValue = (value, spaces) => {
+  if (!_.isObject(value)) {
+    return value;
   }
-  const currentSpaces = getCurrentSpaces(spaces);
-  const nextSpaces = getNextSpaces(spaces);
+  const currentSpaces = getCurrentSpacesCount(spaces);
+  const nextSpaces = getNextSpacesCount(spaces);
   const entries = Object
-    .entries(data)
-    .map(([key, objValue]) => {
-      if (_.isObject(objValue)) {
-        return `${getIndent(currentSpaces)}  ${key}: ${getValue(objValue, nextSpaces)}`;
+    .entries(value)
+    .map(([key, nodeValue]) => {
+      if (_.isObject(nodeValue)) {
+        return `${getIndent(currentSpaces)}  ${key}: ${getValue(nodeValue, nextSpaces)}`;
       }
-      return `${getIndent(currentSpaces)}  ${key}: ${objValue}`;
+      return `${getIndent(currentSpaces)}  ${key}: ${nodeValue}`;
     });
   return `{\n${entries.join('\n')}\n${getIndent(spaces)}}`;
 };
 
-const toStylish = (data) => {
-  const iter = (tree, spaces) => tree.flatMap((obj) => {
-    const currentSpaces = getCurrentSpaces(spaces);
-    const nextSpaces = getNextSpaces(spaces);
-    switch (obj.type) {
+const makeStylish = (diff) => {
+  const iter = (tree, spaces) => tree.flatMap((node) => {
+    const currentSpaces = getCurrentSpacesCount(spaces);
+    const nextSpaces = getNextSpacesCount(spaces);
+    switch (node.type) {
       case ('nested'):
-        return `${getIndent(currentSpaces)}  ${obj.key}: {\n${iter(obj.children, nextSpaces)}\n${getIndent(currentSpaces)}  }`;
+        return `${getIndent(currentSpaces)}  ${node.key}: {\n${iter(node.children, nextSpaces)}\n${getIndent(currentSpaces)}  }`;
       case ('added'):
-        return `${getIndent(currentSpaces)}+ ${obj.key}: ${getValue(obj.value, nextSpaces)}`;
+        return `${getIndent(currentSpaces)}+ ${node.key}: ${getValue(node.value, nextSpaces)}`;
       case ('deleted'):
-        return `${getIndent(currentSpaces)}- ${obj.key}: ${getValue(obj.value, nextSpaces)}`;
+        return `${getIndent(currentSpaces)}- ${node.key}: ${getValue(node.value, nextSpaces)}`;
       case ('updated'):
-        return [`${getIndent(currentSpaces)}- ${obj.key}: ${getValue(obj.firstValue, nextSpaces)}`,
-          `${getIndent(currentSpaces)}+ ${obj.key}: ${getValue(obj.secondValue, nextSpaces)}`];
+        return [`${getIndent(currentSpaces)}- ${node.key}: ${getValue(node.firstValue, nextSpaces)}`,
+          `${getIndent(currentSpaces)}+ ${node.key}: ${getValue(node.secondValue, nextSpaces)}`];
       case ('unchanged'):
-        return `${getIndent(currentSpaces)}  ${obj.key}: ${getValue(obj.value, nextSpaces)}`;
+        return `${getIndent(currentSpaces)}  ${node.key}: ${getValue(node.value, nextSpaces)}`;
       default:
         throw new Error('unexpected type');
     }
   }).join('\n');
-  return `{\n${iter(data, 0)}\n}`;
+  return `{\n${iter(diff, 0)}\n}`;
 };
 
-export default toStylish;
+export default makeStylish;

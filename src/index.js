@@ -1,18 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import parse from './parsers.js';
-import genDiff from './gendiff.js';
+import genDiff from './buildAST.js';
 import stylize from './formatters/index.js';
 
-const getContent = (filepath) => {
-  const ext = path.extname(filepath).slice(1);
-  const fileContent = fs.readFileSync(path.resolve(process.cwd(), filepath));
-  return parse(fileContent, ext);
-};
+const getDataFormat = (filepath) => path.extname(filepath).slice(1);
+const getContent = (filepath) => fs.readFileSync(path.resolve(process.cwd(), filepath));
 
-export default (filepath1, filepath2, format) => {
-  const file1 = getContent(filepath1);
-  const file2 = getContent(filepath2);
-  const dataDiff = genDiff(file1, file2);
+export default (filepath1, filepath2, format = 'stylish') => {
+  const parsedContentOfFile1 = parse(getContent(filepath1), getDataFormat(filepath1));
+  const parsedContentOfFile2 = parse(getContent(filepath2), getDataFormat(filepath2));
+  const dataDiff = genDiff(parsedContentOfFile1, parsedContentOfFile2);
   return stylize(dataDiff, format);
 };
