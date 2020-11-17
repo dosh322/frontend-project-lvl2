@@ -23,7 +23,7 @@ const getValue = (value, spaces) => {
   return `{\n${entries.join('\n')}\n${getIndent(spaces)}}`;
 };
 
-const makeStylish = (diff) => {
+const makeStylish = (ast) => {
   const iter = (tree, spaces) => tree.flatMap((node) => {
     const currentSpaces = getCurrentSpacesCount(spaces);
     const nextSpaces = getNextSpacesCount(spaces);
@@ -43,7 +43,7 @@ const makeStylish = (diff) => {
         throw new Error('unexpected type');
     }
   }).join('\n');
-  return `{\n${iter(diff, 0)}\n}`;
+  return `{\n${iter(ast, 0)}\n}`;
 };
 
 export default makeStylish;

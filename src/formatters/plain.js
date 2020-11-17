@@ -9,7 +9,7 @@ const formatValue = (value) => {
   } return value;
 };
 
-const makePlain = (diff) => {
+const makePlain = (ast) => {
   const iter = (tree, path = []) => tree
     .flatMap((node) => {
       const key = [...path, node.key].join('.');
@@ -25,10 +25,10 @@ const makePlain = (diff) => {
         case ('unchanged'):
           return [];
         default:
-          throw new Error('### Unexpected error ');
+          throw new Error('Unexpected node type');
       }
     }).join('\n');
-  return iter(diff);
+  return iter(ast);
 };
 
 export default makePlain;
