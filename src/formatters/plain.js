@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const formatValue = (value) => {
+const stringify = (value) => {
   if (_.isString(value)) {
     return `'${value}'`;
   }
@@ -10,25 +10,25 @@ const formatValue = (value) => {
 };
 
 const makePlain = (ast) => {
-  const iter = (tree, path = []) => tree
+  const iter = (tree, path) => tree
     .flatMap((node) => {
       const key = [...path, node.key].join('.');
       switch (node.type) {
         case ('added'):
-          return `Property '${key}' was added with value: ${formatValue(node.value)}`;
+          return `Property '${key}' was added with value: ${stringify(node.value)}`;
         case ('deleted'):
           return `Property '${key}' was removed`;
         case ('updated'):
-          return `Property '${key}' was updated. From ${formatValue(node.firstValue)} to ${formatValue(node.secondValue)}`;
+          return `Property '${key}' was updated. From ${stringify(node.firstValue)} to ${stringify(node.secondValue)}`;
         case ('nested'):
-          return `${iter(node.children, [key])}`;
+          return `${iter(node.children, [key]).join('\n')}`;
         case ('unchanged'):
           return [];
         default:
           throw new Error('Unexpected node type');
       }
-    }).join('\n');
-  return iter(ast);
+    });
+  return iter(ast, []).join('\n');
 };
 
 export default makePlain;

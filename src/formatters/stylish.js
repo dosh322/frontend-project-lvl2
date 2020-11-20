@@ -1,46 +1,36 @@
 import _ from 'lodash';
 
-const baseIndent = 2;
+const baseIndent = 4;
+const firstIndent = 2;
+const getIndent = (depth) => (' ').repeat(firstIndent + baseIndent * depth);
 
-const getIndent = (spacesCount) => (' ').repeat(spacesCount);
-const getCurrentSpacesCount = (spacesCount) => spacesCount + baseIndent;
-const getNextSpacesCount = (spacesCount) => getCurrentSpacesCount(spacesCount) + baseIndent;
-
-const getValue = (value, spaces) => {
+const stringify = (value, depth) => {
   if (!_.isObject(value)) {
     return value;
   }
-  const currentSpaces = getCurrentSpacesCount(spaces);
-  const nextSpaces = getNextSpacesCount(spaces);
+  const nestedDepth = depth + 1;
   const entries = Object
     .entries(value)
-    .map(([key, nodeValue]) => {
-      if (_.isObject(nodeValue)) {
-        return `${getIndent(currentSpaces)}  ${key}: ${getValue(nodeValue, nextSpaces)}`;
-      }
-      return `${getIndent(currentSpaces)}  ${key}: ${nodeValue}`;
-    });
-  return `{\n${entries.join('\n')}\n${getIndent(spaces)}}`;
+    .map(([key, nodeValue]) => `${getIndent(nestedDepth)}  ${key}: ${stringify(nodeValue, nestedDepth)}`);
+  return `{\n${entries.join('\n')}\n${getIndent(depth)}  }`;
 };
 
 const makeStylish = (ast) => {
-  const iter = (tree, spaces) => tree.flatMap((node) => {
-    const currentSpaces = getCurrentSpacesCount(spaces);
-    const nextSpaces = getNextSpacesCount(spaces);
+  const iter = (tree, depth) => tree.flatMap((node) => {
     switch (node.type) {
       case ('nested'):
-        return `${getIndent(currentSpaces)}  ${node.key}: {\n${iter(node.children, nextSpaces)}\n${getIndent(currentSpaces)}  }`;
+        return `${getIndent(depth)}  ${node.key}: {\n${iter(node.children, depth + 1)}\n${getIndent(depth)}  }`;
       case ('added'):
-        return `${getIndent(currentSpaces)}+ ${node.key}: ${getValue(node.value, nextSpaces)}`;
+        return `${getIndent(depth)}+ ${node.key}: ${stringify(node.value, depth)}`;
       case ('deleted'):
-        return `${getIndent(currentSpaces)}- ${node.key}: ${getValue(node.value, nextSpaces)}`;
+        return `${getIndent(depth)}- ${node.key}: ${stringify(node.value, depth)}`;
       case ('updated'):
-        return [`${getIndent(currentSpaces)}- ${node.key}: ${getValue(node.firstValue, nextSpaces)}`,
-          `${getIndent(currentSpaces)}+ ${node.key}: ${getValue(node.secondValue, nextSpaces)}`];
+        return [`${getIndent(depth)}- ${node.key}: ${stringify(node.firstValue, depth)}`,
+          `${getIndent(depth)}+ ${node.key}: ${stringify(node.secondValue, depth)}`];
       case ('unchanged'):
-        return `${getIndent(currentSpaces)}  ${node.key}: ${getValue(node.value, nextSpaces)}`;
+        return `${getIndent(depth)}  ${node.key}: ${stringify(node.value, depth)}`;
       default:
-        throw new Error('unexpected type');
+        throw new Error('unexpected node type');
     }
   }).join('\n');
   return `{\n${iter(ast, 0)}\n}`;
