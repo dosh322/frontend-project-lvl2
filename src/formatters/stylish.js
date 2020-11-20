@@ -9,10 +9,10 @@ const stringify = (value, depth) => {
     return value;
   }
   const nestedDepth = depth + 1;
-  const entries = Object
+  const formattedValues = Object
     .entries(value)
     .map(([key, nodeValue]) => `${getIndent(nestedDepth)}  ${key}: ${stringify(nodeValue, nestedDepth)}`);
-  return `{\n${entries.join('\n')}\n${getIndent(depth)}  }`;
+  return `{\n${formattedValues.join('\n')}\n${getIndent(depth)}  }`;
 };
 
 const makeStylish = (ast) => {
