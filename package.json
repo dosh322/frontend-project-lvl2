@@ -1,12 +1,12 @@
 {
-  "name": "frontend-project-lvl2",
+  "name": "@dosh322/gendiff",
   "version": "1.0.0",
   "type": "module",
   "bin": {
     "gendiff": "bin/gendiff.js"
   },
-  "description": "Generate the differences between two JSON/YAML documents",
-  "main": "/index.js",
+  "description": "Generate the differences between two JSON/YAML files",
+  "main": "src/index.js",
   "scripts": {
     "test": "npx -n '--experimental-vm-modules --no-warnings' jest"
   },

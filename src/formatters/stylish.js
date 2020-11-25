@@ -30,7 +30,7 @@ const makeStylish = (ast) => {
       case ('unchanged'):
         return `${getIndent(depth)}  ${node.key}: ${stringify(node.value, depth)}`;
       default:
-        throw new Error('unexpected node type');
+        throw new Error(`unexpected node type: ${node.type}`);
     }
   }).join('\n');
   return `{\n${iter(ast, 0)}\n}`;

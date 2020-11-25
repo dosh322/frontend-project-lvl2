@@ -25,7 +25,7 @@ const makePlain = (ast) => {
         case ('unchanged'):
           return [];
         default:
-          throw new Error('Unexpected node type');
+          throw new Error(`Unexpected node type: ${node.type}`);
       }
     });
   return iter(ast, []).join('\n');
