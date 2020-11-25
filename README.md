@@ -1,6 +1,7 @@
 # Difference Generator
 
 [![on-push-checks](https://github.com/dosh322/frontend-project-lvl2/workflows/on-push-checks/badge.svg)](https://github.com/dosh322/frontend-project-lvl2/actions?query=workflow%3Aon-push-checks)
+[![hexlet-check](https://github.com/dosh322/frontend-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/dosh322/frontend-project-lvl2/actions?query=workflow%3Ahexlet-check)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a0cbd2c8970c284cdda0/maintainability)](https://codeclimate.com/github/dosh322/frontend-project-lvl2/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a0cbd2c8970c284cdda0/test_coverage)](https://codeclimate.com/github/dosh322/frontend-project-lvl2/test_coverage)
 
