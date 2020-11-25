@@ -1,7 +1,7 @@
 install:
 	npm install
 
-install-dev:
+install-CI:
 	npm ci
 
 link:
