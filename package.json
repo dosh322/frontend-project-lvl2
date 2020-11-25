@@ -6,7 +6,7 @@
     "gendiff": "bin/gendiff.js"
   },
   "description": "Generate the differences between two JSON/YAML files",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "npx -n '--experimental-vm-modules --no-warnings' jest"
   },
